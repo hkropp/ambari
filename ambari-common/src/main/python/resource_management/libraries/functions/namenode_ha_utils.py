@@ -175,16 +175,20 @@ def get_property_for_active_namenode(hdfs_site, property_name, security_enabled,
 def get_nameservice(hdfs_site):
   """
   Multiple nameservices can be configured for exmaple to support seamless distcp between two HA clusters. The nameservices
-  are defined as a comma separated list in hdfs_site['dfs.nameservices']. This method splits the value into in an array
-  and identifies the nameservice for the current cluster with what is set in hdfs_site['dfs.namenode.shared.edits.dir'].
-  By default the first nameservice is returned or empty.
+  are defined as a comma separated list in hdfs_site['dfs.nameservices']. The parameter hdfs['dfs.internal.nameservices'] was
+  introduced in Hadoop 2.6 to denote the nameservice for the current cluster (HDFS-6376).
+  This method uses hdfs['dfs.internal.nameservices'] to get the current nameservice, if that parameter is not available it
+  tries to splits the value in hdfs_site['dfs.nameservices'] returning the first string or what is contained in
+  hdfs_site['dfs.namenode.shared.edits.dir']. By default hdfs_site['dfs.nameservices'] is returned.
   :param hdfs_site:
   :return: string or empty
   """
-  name_service = hdfs_site['dfs.nameservices']
-  if name_service:
-    for ns in name_service.split(","):
-      if ns in hdfs_site['dfs.namenode.shared.edits.dir']: # better would be core_site['fs.defaultFS'] but it's not available
-        return ns
-    return name_service.split(",")[0] # default to return the first nameservice
+  name_service = hdfs_site['dfs.internal.nameservices']
+  if not name_service:
+    name_service = hdfs_site['dfs.nameservices']
+    if name_service:
+      for ns in name_service.split(","):
+        if ns in hdfs_site['dfs.namenode.shared.edits.dir']: # better would be core_site['fs.defaultFS'] but it's not available
+          return ns
+      return name_service.split(",")[0] # default to return the first nameservice
   return name_service
