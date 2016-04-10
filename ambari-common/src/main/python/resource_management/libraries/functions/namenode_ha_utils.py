@@ -183,12 +183,12 @@ def get_nameservice(hdfs_site):
   :param hdfs_site:
   :return: string or empty
   """
-  name_service = hdfs_site['dfs.internal.nameservices']
+  name_service = hdfs_site.get('dfs.internal.nameservices', None)
   if not name_service:
-    name_service = hdfs_site['dfs.nameservices']
+    name_service = hdfs_site.get('dfs.nameservices', None)
     if name_service:
       for ns in name_service.split(","):
-        if ns in hdfs_site['dfs.namenode.shared.edits.dir']: # better would be core_site['fs.defaultFS'] but it's not available
+        if 'dfs.namenode.shared.edits.dir' in hdfs_site and ns in hdfs_site['dfs.namenode.shared.edits.dir']: # better would be core_site['fs.defaultFS'] but it's not available
           return ns
       return name_service.split(",")[0] # default to return the first nameservice
   return name_service
