@@ -19,8 +19,10 @@ package org.apache.ambari.server.security.authorization;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -652,6 +654,34 @@ public class Users {
 
     // clear cached entities
     entityManagerProvider.get().getEntityManagerFactory().getCache().evictAll();
+  }
+
+  public Collection<AmbariGrantedAuthority> getUserAuthorities(String userName) {
+    UserEntity userEntity = userDAO.findUserByName(userName);
+    if (userEntity == null) {
+      return Collections.emptyList();
+    }
+
+    // get all of the privileges for the user
+    List<PrincipalEntity> principalEntities = new LinkedList<PrincipalEntity>();
+
+    principalEntities.add(userEntity.getPrincipal());
+
+    List<MemberEntity> memberEntities = memberDAO.findAllMembersByUser(userEntity);
+
+    for (MemberEntity memberEntity : memberEntities) {
+      principalEntities.add(memberEntity.getGroup().getPrincipal());
+    }
+
+    List<PrivilegeEntity> privilegeEntities = privilegeDAO.findAllByPrincipal(principalEntities);
+
+    Set<AmbariGrantedAuthority> authorities = new HashSet<>(privilegeEntities.size());
+
+    for (PrivilegeEntity privilegeEntity : privilegeEntities) {
+      authorities.add(new AmbariGrantedAuthority(privilegeEntity));
+    }
+
+    return authorities;
   }
 
 }

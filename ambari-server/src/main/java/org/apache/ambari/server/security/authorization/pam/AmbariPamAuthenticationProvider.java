@@ -118,8 +118,7 @@ public class AmbariPamAuthenticationProvider implements AuthenticationProvider {
                 // revoke or add admin privileges based on group membership.
                 addRevokeAdminPrivileges(unixUser, user);
 
-                Collection<AmbariGrantedAuthority> userAuthorities = users.getUserAuthorities(user.getUserName(),
-                                                                                              user.getUserType());
+                Collection<AmbariGrantedAuthority> userAuthorities = users.getUserAuthorities(user.getUserName());
 
                 return new AmbariPamAuthenticationToken(user.getUserName(), authentication.getCredentials(), userAuthorities);
             }
