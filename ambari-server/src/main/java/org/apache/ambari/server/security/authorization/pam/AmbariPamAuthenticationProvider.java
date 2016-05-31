@@ -151,7 +151,7 @@ public class AmbariPamAuthenticationProvider implements AuthenticationProvider {
 
     private Set<String> loadLoginGroups(Configuration configuration) {
         Set<String> loginGroups = new HashSet<String>();
-        loginGroups.addAll(getGroupsFromConf(configuration.getUserGroupsAllowed()));
+        loginGroups.addAll(configuration.getAmbariUserLoginGroups());
         if(loginGroups.size() == 1 && ( loginGroups.contains("*") || loginGroups.contains("ALL") ))
             ALL_ALLOWED_LOGIN = true;
         return loginGroups;
@@ -159,13 +159,8 @@ public class AmbariPamAuthenticationProvider implements AuthenticationProvider {
 
     private Set<String> loadAdminGroups(Configuration configuration) {
         Set<String> adminGroups = new HashSet<String>();
-        adminGroups.addAll(getGroupsFromConf(configuration.getUserAdminGroups()));
+        adminGroups.addAll(configuration.getAmbariUserAdminGroups());
         return adminGroups;
-    }
-
-    private List<String> getGroupsFromConf(String groups){
-        String[] groupsFromConf = groups.trim().split(",");
-        return Arrays.asList(groupsFromConf);
     }
 
 

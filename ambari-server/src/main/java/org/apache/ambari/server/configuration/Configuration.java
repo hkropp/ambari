@@ -23,6 +23,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.List;
@@ -161,6 +162,9 @@ public class Configuration {
   public static final String OJDBC_JAR_NAME_DEFAULT = "ojdbc6.jar";
   public static final String MYSQL_JAR_NAME_KEY = "db.mysql.jdbc.name";
   public static final String MYSQL_JAR_NAME_DEFAULT = "mysql-connector-java.jar";
+  public static final String AMBARI_USER_LOGIN_GROUPS = "ambari.user.login.groups";
+  public static final String AMBARI_USER_ADMIN_GROUPS = "ambari.user.admin.groups";
+  public static final String PAM_SERVICE_NAME = "ambari.pam.service.name";
   public static final String IS_LDAP_CONFIGURED = "ambari.ldap.isConfigured";
   public static final String LDAP_USE_SSL_KEY = "authentication.ldap.useSSL";
   public static final String LDAP_PRIMARY_URL_KEY = "authentication.ldap.primaryUrl";
@@ -2638,5 +2642,24 @@ public class Configuration {
 
   public String isAgentStackRetryOnInstallEnabled(){
     return properties.getProperty(AGENT_STACK_RETRY_ON_REPO_UNAVAILABILITY_KEY, AGENT_STACK_RETRY_ON_REPO_UNAVAILABILITY_DEFAULT);
+  }
+
+  private List<String> getGroupsFromConf(String groups){
+    if(groups == null)
+      return new ArrayList<String>();
+    String[] groupsFromConf = groups.trim().split(",");
+    return Arrays.asList(groupsFromConf);
+  }
+
+  public List<String> getAmbariUserLoginGroups(){
+    return getGroupsFromConf(properties.getProperty(AMBARI_USER_LOGIN_GROUPS, "ALL")); // ALL - default all users can login
+  }
+
+  public List<String> getAmbariUserAdminGroups(){
+    return getGroupsFromConf(properties.getProperty(AMBARI_USER_ADMIN_GROUPS));
+  }
+
+  public String getPamServiceName(){
+    return properties.getProperty(PAM_SERVICE_NAME);
   }
 }
