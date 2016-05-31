@@ -95,6 +95,7 @@ import org.apache.ambari.server.security.authorization.AmbariLdapAuthenticationP
 import org.apache.ambari.server.security.authorization.AmbariLocalUserDetailsService;
 import org.apache.ambari.server.security.authorization.Users;
 import org.apache.ambari.server.security.authorization.internal.AmbariInternalAuthenticationProvider;
+import org.apache.ambari.server.security.authorization.pam.AmbariPamAuthenticationProvider;
 import org.apache.ambari.server.security.ldap.AmbariLdapDataPopulator;
 import org.apache.ambari.server.security.unsecured.rest.CertificateDownload;
 import org.apache.ambari.server.security.unsecured.rest.CertificateSign;
@@ -298,6 +299,8 @@ public class AmbariServer {
           injector.getInstance(AmbariLdapDataPopulator.class));
       factory.registerSingleton("ambariAuthorizationFilter",
           injector.getInstance(AmbariAuthorizationFilter.class));
+      factory.registerSingleton("ambariPamAuthenticationProvider",
+                                injector.getInstance(AmbariPamAuthenticationProvider.class));
       factory.registerSingleton("ambariInternalAuthenticationProvider",
           injector.getInstance(AmbariInternalAuthenticationProvider.class));
 

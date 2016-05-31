@@ -39,6 +39,8 @@
 
     <authentication-provider ref="ambariLdapAuthenticationProvider"/>
 
+      <authentication-provider ref="ambariPamAuthenticationProvider"/>
+
     <authentication-provider ref="ambariInternalAuthenticationProvider"/>
 
   </authentication-manager>
