@@ -100,9 +100,9 @@ public class AmbariPamAuthenticationProvider implements AuthenticationProvider {
                 }
 
                 // if user not exist in local db create
-                User user = users.getUser(userName, UserType.PAM);
+                User user = users.getAnyUser(userName);
                 if (user != null) {
-                    users.createUser(userName, null, UserType.PAM, true, false);
+                    users.createUser(userName, null, true, false, false);
                 }
 
                 // is user disabled?
