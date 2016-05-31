@@ -34,7 +34,6 @@ import org.apache.ambari.server.security.ClientSecurityType;
 import org.apache.ambari.server.security.authorization.AmbariGrantedAuthority;
 import org.apache.ambari.server.security.authorization.Group;
 import org.apache.ambari.server.security.authorization.User;
-import org.apache.ambari.server.security.authorization.UserType;
 import org.apache.ambari.server.security.authorization.Users;
 import org.apache.ambari.server.state.SecurityType;
 import org.jvnet.libpam.PAM;
